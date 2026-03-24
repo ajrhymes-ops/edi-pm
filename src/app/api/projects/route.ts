@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listProjects, createProject } from "@/lib/queries/projects";
+import { listProjects, listAllProjects, createProject } from "@/lib/queries/projects";
 import { logActivity } from "@/lib/queries/activity";
 import { z } from "zod";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const projects = await listProjects();
+    const { searchParams } = new URL(request.url);
+    const all = searchParams.get("all") === "true";
+    const projects = all ? await listAllProjects() : await listProjects(null);
     return NextResponse.json(projects);
   } catch (error) {
     console.error("Error listing projects:", error);

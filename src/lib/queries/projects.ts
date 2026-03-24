@@ -84,6 +84,30 @@ export async function listSubProjects(parentId: number): Promise<Project[]> {
   return listProjects(parentId);
 }
 
+export async function listAllProjects(): Promise<Project[]> {
+  const { rows } = await sql`
+    SELECT p.*,
+      s.name as stage_name,
+      s.color as stage_color,
+      (SELECT COUNT(*) FROM tasks WHERE project_id = p.id) as task_count,
+      (SELECT COUNT(*) FROM tasks WHERE project_id = p.id AND status = 'done') as completed_task_count,
+      parent.name as parent_name,
+      (SELECT COUNT(*) FROM projects sub WHERE sub.parent_id = p.id) as sub_project_count
+    FROM projects p
+    LEFT JOIN stages s ON p.current_stage_id = s.id
+    LEFT JOIN projects parent ON p.parent_id = parent.id
+    ORDER BY
+      CASE p.priority
+        WHEN 'urgent' THEN 1
+        WHEN 'high' THEN 2
+        WHEN 'medium' THEN 3
+        WHEN 'low' THEN 4
+      END,
+      p.updated_at DESC
+  `;
+  return rows.map(serializeProject);
+}
+
 export async function createProject(data: {
   name: string;
   description?: string;
