@@ -1,6 +1,17 @@
 import { sql } from "@/lib/db";
 import type { Project } from "@/lib/types";
 
+function serializeProject(row: Record<string, unknown>): Project {
+  return {
+    ...row,
+    start_date: row.start_date ? new Date(row.start_date as string).toISOString().split("T")[0] : null,
+    target_date: row.target_date ? new Date(row.target_date as string).toISOString().split("T")[0] : null,
+    completed_at: row.completed_at ? new Date(row.completed_at as string).toISOString() : null,
+    created_at: new Date(row.created_at as string).toISOString(),
+    updated_at: new Date(row.updated_at as string).toISOString(),
+  } as Project;
+}
+
 export async function listProjects(): Promise<Project[]> {
   const { rows } = await sql`
     SELECT p.*,
@@ -19,7 +30,7 @@ export async function listProjects(): Promise<Project[]> {
       END,
       p.updated_at DESC
   `;
-  return rows as Project[];
+  return rows.map(serializeProject);
 }
 
 export async function getProject(id: number): Promise<Project | null> {
@@ -33,7 +44,7 @@ export async function getProject(id: number): Promise<Project | null> {
     LEFT JOIN stages s ON p.current_stage_id = s.id
     WHERE p.id = ${id}
   `;
-  return (rows[0] as Project) || null;
+  return rows[0] ? serializeProject(rows[0]) : null;
 }
 
 export async function createProject(data: {
