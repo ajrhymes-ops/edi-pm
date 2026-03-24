@@ -19,6 +19,7 @@ const createSchema = z.object({
   client_name: z.string().optional(),
   project_type: z.enum(["onboarding", "integration", "custom"]),
   current_stage_id: z.number().int().positive(),
+  parent_id: z.number().int().positive().nullable().optional(),
   start_date: z.string().optional(),
   target_date: z.string().optional(),
   priority: z.enum(["low", "medium", "high", "urgent"]),

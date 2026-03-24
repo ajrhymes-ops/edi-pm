@@ -20,6 +20,7 @@ export interface Project {
   client_name: string | null;
   project_type: ProjectType;
   current_stage_id: number;
+  parent_id: number | null;
   start_date: string | null;
   target_date: string | null;
   priority: Priority;
@@ -32,6 +33,8 @@ export interface Project {
   stage_color?: string;
   task_count?: number;
   completed_task_count?: number;
+  parent_name?: string;
+  sub_project_count?: number;
 }
 
 export interface Task {

@@ -22,9 +22,10 @@ import { StageBadge } from "@/components/shared/stage-badge";
 import { TaskList } from "@/components/projects/task-list";
 import { CommentList } from "@/components/projects/comment-list";
 import { ActivityFeed } from "@/components/projects/activity-feed";
+import { SubProjectList } from "@/components/projects/sub-project-list";
 import { useTasks } from "@/hooks/use-tasks";
 import { PROJECT_TYPE_CONFIG } from "@/lib/constants";
-import { Pencil, Trash2 } from "lucide-react";
+import { ChevronRight, Pencil, Trash2 } from "lucide-react";
 import type { Project, Stage, HealthStatus, Priority, ProjectType } from "@/lib/types";
 
 export function ProjectDetailClient({
@@ -52,6 +53,15 @@ export function ProjectDetailClient({
 
   return (
     <div className="p-8">
+      {project.parent_id && project.parent_name && (
+        <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2">
+          <Link href={`/projects/${project.parent_id}`} className="hover:underline">
+            {project.parent_name}
+          </Link>
+          <ChevronRight className="h-3.5 w-3.5" />
+          <span>{project.name}</span>
+        </div>
+      )}
       <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold mb-2">{project.name}</h1>
@@ -128,6 +138,14 @@ export function ProjectDetailClient({
       <Tabs defaultValue="tasks">
         <TabsList>
           <TabsTrigger value="tasks">Tasks</TabsTrigger>
+          <TabsTrigger value="subprojects">
+            Sub-Projects
+            {Number(project.sub_project_count ?? 0) > 0 && (
+              <span className="ml-1.5 text-xs bg-muted px-1.5 py-0.5 rounded-full">
+                {project.sub_project_count}
+              </span>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="comments">Comments</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
         </TabsList>
@@ -138,6 +156,9 @@ export function ProjectDetailClient({
             stages={stages}
             onRefresh={() => mutateTasks()}
           />
+        </TabsContent>
+        <TabsContent value="subprojects" className="mt-4">
+          <SubProjectList parentId={project.id} stages={stages} />
         </TabsContent>
         <TabsContent value="comments" className="mt-4">
           <CommentList projectId={project.id} />

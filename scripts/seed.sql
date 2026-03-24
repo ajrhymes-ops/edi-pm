@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS projects (
   client_name VARCHAR(255),
   project_type VARCHAR(50) NOT NULL DEFAULT 'custom',
   current_stage_id INTEGER REFERENCES stages(id),
+  parent_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
   start_date DATE,
   target_date DATE,
   priority VARCHAR(20) NOT NULL DEFAULT 'medium',
