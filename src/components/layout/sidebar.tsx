@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Kanban,
@@ -9,6 +10,7 @@ import {
   FolderOpen,
   Settings,
   Plus,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -23,6 +25,7 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <aside className="flex h-full w-60 flex-col border-r bg-muted/30">
@@ -64,8 +67,35 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t p-4">
-        <p className="text-xs text-muted-foreground">eZCom Software</p>
+      <div className="border-t p-3">
+        {session?.user && (
+          <div className="flex items-center gap-2">
+            {session.user.image ? (
+              <img
+                src={session.user.image}
+                alt=""
+                className="h-7 w-7 rounded-full"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-xs font-medium">
+                {session.user.name?.[0] ?? "U"}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium truncate">
+                {session.user.name}
+              </p>
+            </div>
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="p-1 rounded hover:bg-muted text-muted-foreground"
+              title="Sign out"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   );
