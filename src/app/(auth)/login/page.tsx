@@ -6,13 +6,13 @@ export default async function LoginPage() {
   if (session) redirect("/dashboard");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/30">
-      <div className="w-full max-w-sm space-y-6 rounded-lg border bg-background p-8 shadow-sm">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-accent/30">
+      <div className="w-full max-w-sm space-y-6 rounded-2xl border bg-card p-8 shadow-lg shadow-primary/5">
         <div className="space-y-2 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground text-lg font-bold">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-primary-foreground text-lg font-bold shadow-md shadow-primary/20">
             PM
           </div>
-          <h1 className="text-2xl font-semibold">eZCom PM</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">eZCom PM</h1>
           <p className="text-sm text-muted-foreground">
             Sign in to access your projects
           </p>
@@ -25,7 +25,7 @@ export default async function LoginPage() {
         >
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-3 rounded-md border bg-background px-4 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
+            className="flex w-full items-center justify-center gap-3 rounded-xl border bg-card px-4 py-3 text-sm font-medium transition-all hover:bg-accent hover:shadow-sm"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
