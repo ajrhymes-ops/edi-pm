@@ -34,7 +34,7 @@ export function Sidebar() {
   return (
     <aside className="flex h-full w-60 flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex h-14 items-center gap-2.5 border-b border-sidebar-border px-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground text-xs font-bold shadow-sm">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary text-white text-xs font-bold shadow-md shadow-sidebar-primary/30">
           PM
         </div>
         <span className="font-semibold text-sm tracking-tight">eZCom PM</span>
@@ -44,7 +44,7 @@ export function Sidebar() {
         <Link href="/projects/new">
           <Button
             size="sm"
-            className="w-full justify-start gap-2 bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/80"
+            className="w-full justify-start gap-2 gradient-primary text-white border-0 shadow-md shadow-sidebar-primary/20 hover:shadow-lg hover:shadow-sidebar-primary/30 transition-shadow"
           >
             <Plus className="h-4 w-4" />
             New Project

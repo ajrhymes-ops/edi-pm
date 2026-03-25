@@ -122,9 +122,9 @@ export function ProjectDetailClient({
         {project.target_date && <span>Target: {project.target_date}</span>}
         {taskCount > 0 && (
           <div className="flex items-center gap-2">
-            <div className="h-2 w-24 rounded-full bg-muted">
+            <div className="h-2 w-24 rounded-full bg-muted overflow-hidden">
               <div
-                className="h-2 rounded-full bg-primary"
+                className="h-2 rounded-full gradient-progress"
                 style={{ width: `${progress}%` }}
               />
             </div>

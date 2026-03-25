@@ -112,9 +112,9 @@ export default async function ProjectsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <div className="h-2 w-16 rounded-full bg-muted">
+                        <div className="h-2 w-16 rounded-full bg-muted overflow-hidden">
                           <div
-                            className="h-2 rounded-full bg-primary"
+                            className="h-2 rounded-full gradient-progress"
                             style={{ width: `${progress}%` }}
                           />
                         </div>

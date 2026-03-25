@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { listProjects } from "@/lib/queries/projects";
+import { listStages } from "@/lib/queries/stages";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { PriorityBadge } from "@/components/shared/priority-badge";
 import { StageBadge } from "@/components/shared/stage-badge";
+import { StageChart } from "@/components/dashboard/stage-chart";
 import type { HealthStatus, Priority } from "@/lib/types";
 import {
   FolderOpen,
@@ -18,7 +20,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const projects = await listProjects();
+  const [projects, stages] = await Promise.all([listProjects(), listStages()]);
 
   const active = projects.filter((p) => !p.completed_at);
   const onTrack = active.filter((p) => p.health_status === "on_track").length;
@@ -66,7 +68,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <Link href="/projects/new">
-          <Button size="sm" className="gap-2">
+          <Button size="sm" className="gap-2 gradient-primary text-white border-0 shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-shadow">
             <Plus className="h-4 w-4" />
             New Project
           </Button>
@@ -75,7 +77,7 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map((stat) => (
-          <Card key={stat.label}>
+          <Card key={stat.label} className="card-hover">
             <CardContent className="p-5">
               <div className="flex items-center gap-3">
                 <div className={`rounded-xl p-2.5 ${stat.bgColor}`}>
@@ -94,6 +96,23 @@ export default async function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      {active.length > 0 && (
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="text-lg">Project Pipeline</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <StageChart
+              data={stages.map((stage) => ({
+                name: stage.name,
+                count: active.filter((p) => p.current_stage_id === stage.id).length,
+                color: stage.color,
+              }))}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -132,7 +151,7 @@ export default async function DashboardPage() {
                   <Link
                     key={project.id}
                     href={`/projects/${project.id}`}
-                    className="flex items-center justify-between rounded-xl border p-4 hover:bg-accent/50 transition-all group"
+                    className="flex items-center justify-between rounded-xl border p-4 hover:bg-accent/50 card-hover group"
                   >
                     <div className="flex items-center gap-4">
                       <div>
@@ -159,13 +178,13 @@ export default async function DashboardPage() {
                       />
                       {taskCount > 0 && (
                         <div className="flex items-center gap-2 w-24">
-                          <div className="h-1.5 flex-1 rounded-full bg-muted">
+                          <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden">
                             <div
-                              className="h-1.5 rounded-full bg-primary transition-all"
+                              className="h-1.5 rounded-full gradient-progress transition-all"
                               style={{ width: `${progress}%` }}
                             />
                           </div>
-                          <span className="text-xs text-muted-foreground w-8">
+                          <span className="text-xs font-mono text-muted-foreground w-8">
                             {progress}%
                           </span>
                         </div>
